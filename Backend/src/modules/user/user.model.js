@@ -58,17 +58,14 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-// Indexes
-userSchema.index({ phone: 1 }, { unique: true });
-userSchema.index({ publicUserId: 1 }, { unique: true });
+
 
 // Pre-save hook to generate publicUserId if not present
-userSchema.pre('save', function (next) {
+userSchema.pre('save', function () {
   if (!this.publicUserId) {
     const randomDigits = Math.floor(1000 + Math.random() * 9000); // Generates a random 4-digit number (1000-9999)
     this.publicUserId = `MOVEET-${randomDigits}`;
   }
-  next();
 });
 
 const User = mongoose.model('User', userSchema);

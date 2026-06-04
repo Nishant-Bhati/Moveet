@@ -1,6 +1,5 @@
 import jwt from 'jsonwebtoken';
 import { sendError } from '../utils/apiResponse.js';
-import User from '../modules/user/user.model.js';
 
 export const protect = async (req, res, next) => {
   let token;
@@ -11,12 +10,12 @@ export const protect = async (req, res, next) => {
 
       const decoded = jwt.verify(token, process.env.JWT_SECRET || 'jwt_secret_placeholder');
 
-      // Populate user info (excluding sensitive details like password)
-      req.user = await User.findById(decoded.id).select('-password');
-
-      if (!req.user) {
-        return sendError(res, 'Not authorized, user not found', 401);
-      }
+      // Attach req.user with userId, _id (for backward compatibility), and phone
+      req.user = {
+        userId: decoded.userId,
+        _id: decoded.userId,
+        phone: decoded.phone,
+      };
 
       return next();
     } catch (error) {
