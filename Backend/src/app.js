@@ -4,8 +4,9 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 import authRoutes from './modules/auth/auth.routes.js';
-import userRoutes from './modules/user/userRoutes.js';
+import userRoutes from './modules/user/user.routes.js';
 import { errorHandler, notFound } from './middlewares/errorMiddleware.js';
+import { sendSuccess } from './utils/apiResponse.js';
 
 // Load environment variables
 dotenv.config();
@@ -21,11 +22,11 @@ app.use(express.urlencoded({ extended: true }));
 
 // API Routes
 app.use('/auth', authRoutes);
-app.use('/api/users', userRoutes);
+app.use('/user', userRoutes);
 
 // Health check route
 app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'OK', timestamp: new Date() });
+  return sendSuccess(res, null, 'Server is healthy', 200);
 });
 
 // Fallback Middlewares

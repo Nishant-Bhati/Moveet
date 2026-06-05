@@ -32,7 +32,7 @@ const connectDB = async () => {
     await mongoose.connect(mongoURI);
   } catch (error) {
     logger.error(`Database connection failed: ${error.message}`);
-    process.exit(1);
+    logger.warn('Continuing server execution without database connection. Operations that query the database will buffer or time out.');
   }
 };
 

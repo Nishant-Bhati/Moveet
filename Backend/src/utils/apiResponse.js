@@ -1,22 +1,17 @@
-export const sendSuccess = (res, data, message = 'Success', statusCode = 200) => {
+export const sendSuccess = (res, data = null, message = 'Success', statusCode = 200) => {
   return res.status(statusCode).json({
     success: true,
-    message,
     data,
+    message,
   });
 };
 
 export const sendError = (res, message = 'Internal Server Error', statusCode = 500, errors = undefined) => {
-  const response = {
+  return res.status(statusCode).json({
     success: false,
+    data: errors || null,
     message,
-  };
-  
-  if (errors) {
-    response.errors = errors;
-  }
-
-  return res.status(statusCode).json(response);
+  });
 };
 
 export default {
