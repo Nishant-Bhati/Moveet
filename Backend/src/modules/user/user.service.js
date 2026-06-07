@@ -1,12 +1,15 @@
 import User from './user.model.js';
 import UserPreferences from './userPreferences.model.js';
 import EmergencyContact from './emergencyContact.model.js';
+import { getNotifications } from '../notification/notification.service.js';
 
 export const getMe = async (userId) => {
   const user = await User.findById(userId);
   if (!user) {
     throw new Error('User not found');
   }
+  
+  const notifications = await getNotifications(userId);
   
   return {
     id: user.publicUserId,
@@ -19,7 +22,7 @@ export const getMe = async (userId) => {
     activePlanId: user.activePlanId || null,
     planExpiryDate: user.planExpiryDate || null,
     autoRenew: user.autoRenew,
-    notifications: [], // Placeholder for notifications array
+    notifications,
   };
 };
 

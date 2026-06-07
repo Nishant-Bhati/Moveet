@@ -9,7 +9,10 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
-    "test": "jest"
+    "test": "jest",
+    "seed:plans": "node src/seed/plans.seed.js",
+    "seed:support": "node src/seed/supportContact.seed.js",
+    "seed:all": "node src/seed/plans.seed.js && node src/seed/supportContact.seed.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
