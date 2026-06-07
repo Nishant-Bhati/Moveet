@@ -1,5 +1,6 @@
 import Kyc from './kyc.model.js';
 import User from '../user/user.model.js';
+import { createNotification } from '../notification/notification.service.js';
 
 export const submitKyc = async (userId, body) => {
   const { aadhaarNumber, dlNumber } = body;
@@ -20,6 +21,9 @@ export const submitKyc = async (userId, body) => {
 
   // 2. Update the user's KYC status to PENDING
   await User.findByIdAndUpdate(userId, { kycStatus: 'PENDING' });
+
+  // 3. Call notification service
+  await createNotification(userId, 'INFO', 'KYC submitted', 'Your documents are under review.');
 
   return kyc;
 };

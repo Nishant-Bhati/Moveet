@@ -2,6 +2,14 @@ import jwt from 'jsonwebtoken';
 import User from '../user/user.model.js';
 import logger from '../../utils/logger.js';
 
+export class NotImplementedError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'NotImplementedError';
+    this.statusCode = 501;
+  }
+}
+
 // Map cache for storing OTPs
 // Key: phone, Value: { otp, expiresAt }
 const otpCache = new Map();
@@ -9,6 +17,10 @@ const otpCache = new Map();
 const OTP_TTL = 5 * 60 * 1000; // 5 minutes TTL
 
 export const sendOtp = async (phone) => {
+  if (process.env.NODE_ENV === 'production') {
+    throw new NotImplementedError('SMS provider not configured.');
+  }
+
   const isDev = process.env.NODE_ENV === 'development';
   let otp;
 
@@ -23,7 +35,7 @@ export const sendOtp = async (phone) => {
   } else {
     logger.warn(`[Prod Mode] TODO: Integrate real SMS gateway provider to send OTP to ${phone}`);
     
-    // Generate a random 6-digit OTP in production so verify is still testable
+    // Generate a random 6-digit OTP in production so verify is still testable (fallback for staging/test environments)
     otp = Math.floor(100000 + Math.random() * 900000).toString();
     logger.info(`[Prod Mode] Generated OTP for testing: ${otp}`);
     

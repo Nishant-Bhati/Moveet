@@ -1,27 +1,10 @@
 import express from 'express';
 import { z } from 'zod';
 import protect from '../../middlewares/authMiddleware.js';
+import validateRequest from '../../middlewares/validationMiddleware.js';
 import paymentController from './payment.controller.js';
-import { sendError } from '../../utils/apiResponse.js';
 
 const router = express.Router();
-
-// Helper middleware to validate request body using Zod schemas
-const validateBody = (schema) => (req, res, next) => {
-  try {
-    req.body = schema.parse(req.body);
-    next();
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      const errorDetails = error.issues.map((err) => ({
-        field: err.path.join('.'),
-        message: err.message,
-      }));
-      return sendError(res, 'Validation failed', 400, errorDetails);
-    }
-    next(error);
-  }
-};
 
 // Zod validation schemas
 const purchaseTopupSchema = z.object({
@@ -44,9 +27,9 @@ router.get('/plans', paymentController.getPlans);
 router.get('/topup-presets', paymentController.getTopupPresets);
 
 // Protected Routes
-router.post('/purchase', protect, validateBody(purchaseTopupSchema), paymentController.purchaseTopup);
-router.post('/verify', protect, validateBody(verifyTopupSchema), paymentController.verifyTopup);
-router.post('/subscribe', protect, validateBody(subscribePlanSchema), paymentController.subscribePlan);
+router.post('/purchase', protect, validateRequest(purchaseTopupSchema), paymentController.purchaseTopup);
+router.post('/verify', protect, validateRequest(verifyTopupSchema), paymentController.verifyTopup);
+router.post('/subscribe', protect, validateRequest(subscribePlanSchema), paymentController.subscribePlan);
 router.post('/cancel', protect, paymentController.cancelSubscription);
 router.get('/transactions', protect, paymentController.getTransactions);
 

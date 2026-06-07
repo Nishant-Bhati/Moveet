@@ -95,8 +95,7 @@ export const endRide = async (userId) => {
   // TODO: call IoT lock endpoint when available
 
   // 8. Call notification service
-  const durationMin = Math.ceil(durationSeconds / 60);
-  const notificationMessage = `Your ride ended. Duration: ${durationMin} min. Cost: ₹${cost}.`;
+  const notificationMessage = `Your ride ended. Cost: ₹${cost}.`;
   await createNotification(userId, 'SUCCESS', 'Ride complete', notificationMessage);
 
   return ride;

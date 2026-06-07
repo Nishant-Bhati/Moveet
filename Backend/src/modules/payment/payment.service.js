@@ -93,7 +93,7 @@ export const verifyTopup = async (userId, body) => {
     userId,
     'SUCCESS',
     'Wallet topped up',
-    `₹${payment.amount} has been added to your wallet.`
+    `₹${payment.amount} added to your wallet.`
   );
 
   return {
@@ -150,7 +150,7 @@ export const subscribePlan = async (userId, planId) => {
     userId,
     'INFO',
     'Plan activated',
-    `Your ${plan.name} is now active until ${updatedUser.planExpiryDate.toLocaleDateString()}.`
+    `Your ${plan.name} is now active.`
   );
 
   return {
