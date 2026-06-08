@@ -10,6 +10,7 @@ import { setToken } from '../store/authSlice.js';
 const RootNavigator = () => {
   const dispatch = useDispatch();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const profile = useSelector((state) => state.user.profile);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -37,9 +38,12 @@ const RootNavigator = () => {
     );
   }
 
+  const isKycApproved = profile?.kycStatus === 'APPROVED';
+  const showApp = isAuthenticated && isKycApproved;
+
   return (
     <NavigationContainer>
-      {isAuthenticated ? <AppNavigator /> : <AuthNavigator />}
+      {showApp ? <AppNavigator /> : <AuthNavigator />}
     </NavigationContainer>
   );
 };

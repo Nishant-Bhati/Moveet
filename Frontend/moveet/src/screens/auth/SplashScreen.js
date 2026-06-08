@@ -12,6 +12,7 @@ const SplashScreen = () => {
   const [checking, setChecking] = useState(true);
 
   useEffect(() => {
+    let timeoutId;
     const checkAuth = async () => {
       try {
         const token = await storage.getToken();
@@ -20,8 +21,17 @@ const SplashScreen = () => {
           const result = await dispatch(fetchMeThunk());
           
           if (fetchMeThunk.fulfilled.match(result)) {
-            // Success: sync token state to Redux (RootNavigator switches to AppNavigator)
+            const user = result.payload;
+            // Success: sync token state to Redux (if APPROVED, RootNavigator switches to AppNavigator)
             dispatch(setToken(token));
+
+            // Navigate to KYC screens if not approved
+            const kycStatus = user?.kycStatus;
+            if (kycStatus === 'NOT_STARTED') {
+              navigation.navigate('KycForm');
+            } else if (kycStatus === 'PENDING') {
+              navigation.navigate('KycPending');
+            }
           } else {
             // Failure (token expired/invalid): dispatch logout() then navigate to LoginScreen
             dispatch(logout());
@@ -29,7 +39,7 @@ const SplashScreen = () => {
           }
         } else {
           // If no token: navigate to LoginScreen after a 1.5s delay
-          setTimeout(() => {
+          timeoutId = setTimeout(() => {
             navigation.navigate('Login');
           }, 1500);
         }
@@ -43,6 +53,12 @@ const SplashScreen = () => {
     };
 
     checkAuth();
+
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
   }, [dispatch, navigation]);
 
   return (
