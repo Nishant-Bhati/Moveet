@@ -1,14 +1,22 @@
+/* eslint-disable react/no-unstable-nested-components */
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Icon from 'react-native-vector-icons/Ionicons';
+
+// Screen Imports
 import HomeScreen from '../screens/home/HomeScreen.js';
 import MyScooterScreen from '../screens/scooter/MyScooterScreen.js';
 import PaymentsScreen from '../screens/payments/PaymentsScreen.js';
 import ProfileScreen from '../screens/profile/ProfileScreen.js';
-import Icon from 'react-native-vector-icons/Ionicons';
+import QrScanScreen from '../screens/home/QrScanScreen.js';
+import ActiveRideScreen from '../screens/ride/ActiveRideScreen.js';
+import RideSummaryScreen from '../screens/ride/RideSummaryScreen.js';
 
 const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
 
-const AppNavigator = () => {
+const TabNavigator = () => {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -41,6 +49,30 @@ const AppNavigator = () => {
       <Tab.Screen name="Payments" component={PaymentsScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
+  );
+};
+
+const AppNavigator = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+        animation: 'slide_from_right',
+      }}
+    >
+      <Stack.Screen name="Main" component={TabNavigator} />
+      <Stack.Screen name="QrScan" component={QrScanScreen} />
+      <Stack.Screen 
+        name="ActiveRide" 
+        component={ActiveRideScreen} 
+        options={{ gestureEnabled: false }}
+      />
+      <Stack.Screen 
+        name="RideSummary" 
+        component={RideSummaryScreen} 
+        options={{ gestureEnabled: false }}
+      />
+    </Stack.Navigator>
   );
 };
 
