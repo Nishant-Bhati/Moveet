@@ -98,7 +98,7 @@ export const endRide = async (userId) => {
   const notificationMessage = `Your ride ended. Cost: ₹${cost}.`;
   await createNotification(userId, 'SUCCESS', 'Ride complete', notificationMessage);
 
-  return ride;
+  return await ride.populate('scooterId');
 };
 
 export const getRideHistory = async (userId) => {
