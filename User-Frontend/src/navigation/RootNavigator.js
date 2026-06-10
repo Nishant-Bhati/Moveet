@@ -1,11 +1,9 @@
-import { useEffect, useState } from 'react';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
-import { ActivityIndicator, View } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
-import { setToken } from '../store/authSlice';
-import { getToken } from '../utils/storage';
+import { ActivityIndicator, View, StyleSheet } from 'react-native';
+import { useSelector } from 'react-redux';
 import AuthNavigator from './AuthNavigator';
 import AppNavigator from './AppNavigator';
+import useAppInit from '../hooks/useAppInit';
 
 const darkTheme = {
   ...DefaultTheme,
@@ -21,29 +19,12 @@ const darkTheme = {
 };
 
 export default function RootNavigator() {
-  const [isLoading, setIsLoading] = useState(true);
-  const dispatch = useDispatch();
+  const { isInitializing } = useAppInit();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
-  useEffect(() => {
-    const bootstrap = async () => {
-      try {
-        const token = await getToken();
-        if (token) {
-          dispatch(setToken(token));
-        }
-      } catch {
-        // token not found
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    bootstrap();
-  }, [dispatch]);
-
-  if (isLoading) {
+  if (isInitializing) {
     return (
-      <View style={{ flex: 1, backgroundColor: '#0D0D0D', justifyContent: 'center', alignItems: 'center' }}>
+      <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#00E676" />
       </View>
     );
@@ -55,3 +36,12 @@ export default function RootNavigator() {
     </NavigationContainer>
   );
 }
+
+const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    backgroundColor: '#0D0D0D',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});

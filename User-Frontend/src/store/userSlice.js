@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import api from '../api/axiosInstance';
+import { showError } from '../utils/toast';
 
 export const fetchMeThunk = createAsyncThunk('user/fetchMe', async (_, { rejectWithValue }) => {
   try {
@@ -40,6 +41,7 @@ const userSlice = createSlice({
       .addCase(fetchMeThunk.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload || action.error.message;
+        showError(action.payload || action.error.message);
       });
   },
 });

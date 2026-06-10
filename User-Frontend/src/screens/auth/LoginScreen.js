@@ -13,7 +13,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import { sendOtpThunk } from '../../store/authSlice';
-import { colors, fontSizes, spacing, borderRadius as br } from '../../utils/theme';
+import { colors, fontSizes, spacing } from '../../utils/theme';
 
 export default function LoginScreen() {
   const navigation = useNavigation();

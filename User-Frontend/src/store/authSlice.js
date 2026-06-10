@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { sendOtp, verifyOtp } from '../api/authApi';
 import { saveToken, clearToken } from '../utils/storage';
+import { showError } from '../utils/toast';
 
 export const sendOtpThunk = createAsyncThunk('auth/sendOtp', async (phone) => {
   await sendOtp(phone);
@@ -41,6 +42,11 @@ const authSlice = createSlice({
       state.isAuthenticated = true;
       state.error = null;
     },
+    setAuthTokenOnly: (state, action) => {
+      state.token = action.payload;
+      state.isAuthenticated = false;
+      state.error = null;
+    },
     setLoading: (state, action) => {
       state.isLoading = action.payload;
     },
@@ -61,6 +67,7 @@ const authSlice = createSlice({
       .addCase(sendOtpThunk.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload || action.error.message;
+        showError(action.payload || action.error.message);
       })
       .addCase(verifyOtpThunk.pending, (state) => {
         state.isLoading = true;
@@ -75,6 +82,7 @@ const authSlice = createSlice({
       .addCase(verifyOtpThunk.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload || action.error.message;
+        showError(action.payload || action.error.message);
       })
       .addCase(logout.fulfilled, (state) => {
         state.token = null;
@@ -84,5 +92,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { setToken, setLoading, setError } = authSlice.actions;
+export const { setToken, setAuthTokenOnly, setLoading, setError } = authSlice.actions;
 export default authSlice.reducer;

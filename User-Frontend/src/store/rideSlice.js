@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import * as rideApi from '../api/rideApi';
 import { fetchMeThunk } from './userSlice';
+import { showError, showSuccess } from '../utils/toast';
 
 export const startRideThunk = createAsyncThunk(
   'ride/startRide',
@@ -81,6 +82,7 @@ const rideSlice = createSlice({
       .addCase(startRideThunk.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload || action.error.message;
+        showError(state.error);
       })
       // fetchActiveRideThunk
       .addCase(fetchActiveRideThunk.pending, (state) => {
@@ -95,6 +97,7 @@ const rideSlice = createSlice({
       .addCase(fetchActiveRideThunk.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload || action.error.message;
+        showError(state.error);
       })
       // endRideThunk
       .addCase(endRideThunk.pending, (state) => {
@@ -105,10 +108,12 @@ const rideSlice = createSlice({
         state.isLoading = false;
         state.activeRide = null; // Clear active ride on success
         state.error = null;
+        showSuccess('Ride ended successfully!');
       })
       .addCase(endRideThunk.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload || action.error.message;
+        showError(state.error);
       })
       // fetchRideHistoryThunk
       .addCase(fetchRideHistoryThunk.pending, (state) => {
@@ -123,6 +128,7 @@ const rideSlice = createSlice({
       .addCase(fetchRideHistoryThunk.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload || action.error.message;
+        showError(state.error);
       });
   },
 });

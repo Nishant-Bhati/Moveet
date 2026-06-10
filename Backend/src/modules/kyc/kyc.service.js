@@ -39,6 +39,8 @@ export const getKycStatus = async (userId) => {
     rejectionReason: kyc.rejectionReason,
     submittedAt: kyc.submittedAt,
     reviewedAt: kyc.reviewedAt,
+    aadhaarNumber: kyc.aadhaarNumber,
+    dlNumber: kyc.dlNumber,
   };
 };
 

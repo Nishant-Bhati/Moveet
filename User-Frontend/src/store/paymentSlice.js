@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import * as paymentApi from '../api/paymentApi';
 import { fetchMeThunk } from './userSlice';
+import { showError, showSuccess } from '../utils/toast';
 
 export const fetchPlansThunk = createAsyncThunk(
   'payment/fetchPlans',
@@ -121,6 +122,7 @@ const paymentSlice = createSlice({
       .addCase(fetchPlansThunk.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload || action.error.message;
+        showError(state.error);
       })
       // fetchTopupPresetsThunk
       .addCase(fetchTopupPresetsThunk.pending, (state) => {
@@ -135,6 +137,7 @@ const paymentSlice = createSlice({
       .addCase(fetchTopupPresetsThunk.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload || action.error.message;
+        showError(state.error);
       })
       // purchaseTopupThunk
       .addCase(purchaseTopupThunk.pending, (state) => {
@@ -148,6 +151,7 @@ const paymentSlice = createSlice({
       .addCase(purchaseTopupThunk.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload || action.error.message;
+        showError(state.error);
       })
       // verifyTopupThunk
       .addCase(verifyTopupThunk.pending, (state) => {
@@ -157,10 +161,12 @@ const paymentSlice = createSlice({
       .addCase(verifyTopupThunk.fulfilled, (state) => {
         state.isLoading = false;
         state.error = null;
+        showSuccess('Wallet top-up successful!');
       })
       .addCase(verifyTopupThunk.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload || action.error.message;
+        showError(state.error);
       })
       // subscribePlanThunk
       .addCase(subscribePlanThunk.pending, (state) => {
@@ -170,10 +176,12 @@ const paymentSlice = createSlice({
       .addCase(subscribePlanThunk.fulfilled, (state) => {
         state.isLoading = false;
         state.error = null;
+        showSuccess('Subscribed to plan successfully!');
       })
       .addCase(subscribePlanThunk.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload || action.error.message;
+        showError(state.error);
       })
       // cancelSubscriptionThunk
       .addCase(cancelSubscriptionThunk.pending, (state) => {
@@ -187,6 +195,7 @@ const paymentSlice = createSlice({
       .addCase(cancelSubscriptionThunk.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload || action.error.message;
+        showError(state.error);
       })
       // fetchTransactionsThunk
       .addCase(fetchTransactionsThunk.pending, (state) => {
@@ -201,6 +210,7 @@ const paymentSlice = createSlice({
       .addCase(fetchTransactionsThunk.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload || action.error.message;
+        showError(state.error);
       });
   },
 });

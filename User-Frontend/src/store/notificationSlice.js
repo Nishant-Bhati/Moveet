@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import * as notificationApi from '../api/notificationApi';
+import { showError } from '../utils/toast';
 
 export const fetchNotificationsThunk = createAsyncThunk(
   'notification/fetchNotifications',
@@ -92,6 +93,15 @@ const notificationSlice = createSlice({
       .addCase(fetchNotificationsThunk.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload || action.error.message;
+        showError(state.error);
+      })
+      .addCase(markAsReadThunk.rejected, (state, action) => {
+        state.error = action.payload || action.error.message;
+        showError(state.error);
+      })
+      .addCase(markAllAsReadThunk.rejected, (state, action) => {
+        state.error = action.payload || action.error.message;
+        showError(state.error);
       });
   },
 });

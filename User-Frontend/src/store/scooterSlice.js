@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import * as scooterApi from '../api/scooterApi';
+import { showError } from '../utils/toast';
 
 export const fetchNearbyScooters = createAsyncThunk(
   'scooter/fetchNearby',
@@ -56,6 +57,7 @@ const scooterSlice = createSlice({
       .addCase(fetchNearbyScooters.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload || action.error.message;
+        showError(action.payload || action.error.message);
       })
       // fetchScooterById
       .addCase(fetchScooterById.pending, (state) => {
@@ -70,6 +72,7 @@ const scooterSlice = createSlice({
       .addCase(fetchScooterById.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload || action.error.message;
+        showError(action.payload || action.error.message);
       });
   },
 });
