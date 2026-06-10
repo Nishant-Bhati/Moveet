@@ -8,7 +8,9 @@ export const startRideThunk = createAsyncThunk(
   async (scooterId, { rejectWithValue }) => {
     try {
       const response = await rideApi.startRide(scooterId);
-      return response.data?.data || response.data;
+      return response.data && Object.prototype.hasOwnProperty.call(response.data, 'data')
+        ? response.data.data
+        : response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || 'Failed to start ride');
     }
@@ -20,7 +22,9 @@ export const fetchActiveRideThunk = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await rideApi.getActiveRide();
-      return response.data?.data || response.data;
+      return response.data && Object.prototype.hasOwnProperty.call(response.data, 'data')
+        ? response.data.data
+        : response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch active ride');
     }
@@ -32,7 +36,9 @@ export const endRideThunk = createAsyncThunk(
   async (_, { dispatch, rejectWithValue }) => {
     try {
       const response = await rideApi.endRide();
-      const data = response.data?.data || response.data;
+      const data = response.data && Object.prototype.hasOwnProperty.call(response.data, 'data')
+        ? response.data.data
+        : response.data;
       // Refresh user profile/wallet details
       await dispatch(fetchMeThunk());
       return data;
@@ -47,7 +53,9 @@ export const fetchRideHistoryThunk = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await rideApi.getRideHistory();
-      return response.data?.data || response.data;
+      return response.data && Object.prototype.hasOwnProperty.call(response.data, 'data')
+        ? response.data.data
+        : response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch ride history');
     }
